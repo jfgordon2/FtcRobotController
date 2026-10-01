@@ -13,7 +13,7 @@ public class Meeting2OneMotor extends LinearOpMode {
         // STUDENT: Replace only the text inside these quotation marks.
         DcMotor testMotor = hardwareMap.get(DcMotor.class, "REPLACE_WITH_DRIVER_STATION_NAME");
         testMotor.setPower(0.0);
-        
+
         telemetry.addData("Current mode", testMotor.getMode());
         telemetry.addLine("Ready. Check the supported robot before Start.");
         telemetry.update();
