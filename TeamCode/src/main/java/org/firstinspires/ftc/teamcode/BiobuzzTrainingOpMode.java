@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="BIOBUZZ Training", group="Training")
+@TeleOp(name="BIOBUZZ Training", group = "Lessons")
 @Disabled
 public class BiobuzzTrainingOpMode extends LinearOpMode {
     @Override

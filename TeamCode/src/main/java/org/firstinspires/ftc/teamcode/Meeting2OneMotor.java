@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "M2 One Motor Test", group = "BIOBUZZ")
+@TeleOp(name = "M2 One Motor Test", group = "Lessons")
 @Disabled
 public class Meeting2OneMotor extends LinearOpMode {
     @Override
