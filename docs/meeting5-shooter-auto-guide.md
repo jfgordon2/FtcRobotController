@@ -17,7 +17,7 @@ start line and the parking zone.
 | Which robot | `StarterRobot.java` | Set `ROBOT` to the robot on the table. `PRACTICE_GOBILDA` expects `left_drive`, `right_drive`, `launcher`, `left_feeder`, `right_feeder`. `PRACTICE_REV` expects `leftDrive`, `rightDrive`, `flywheel`, `coreHex`, `servo`. Both also need `imu` and `Webcam 1` in the Driver Station configuration. |
 | Hub direction | `Heading.java` | Students check this first in the lesson. Look at the Hub beforehand so you know the right `LOGO` and `USB`, and leave `MOUNTING_CONFIRMED = false`. Set it to `true` and build once students show you the turn test (a quarter turn right by hand raises the heading by about 90) and the tilt test (lifting the front or one side barely changes it). |
 | Drive direction | `StarterRobot.java` | Wheels off the floor, run **Tune Shooter**, push the left stick forward. Both sides roll forward. Then `MOTION_ENABLED = true`. |
-| Launcher | `ShooterCalibration.java` | No balls. Hold right bumper; measured speed should reach the requested speed. `MAXIMUM_SPEED` (1800 ticks/s) is the cap for the tuner and the table; lower it if the room needs it. |
+| Launcher | `ShooterCalibration.java` | No balls. Hold right bumper; measured speed should reach the requested speed. `MAXIMUM_SPEED` (1800 ticks/s) is the cap for the tuner and the table; lower it if the room needs it. If it never reaches speed on a good battery, see the lesson's mentor notes ("If the launcher will not reach speed"). |
 | Camera | webcam mount | Tilt it up, about 45 degrees to start. The tags will be about 50 inches up the wall and the robot is 2 to 3 feet away. |
 
 Three programs are used and all three appear on the Driver Station:
