@@ -35,7 +35,7 @@ SUBHEAD = ParagraphStyle("subhead", parent=BODY, fontName="Helvetica-Bold",
                          fontSize=12.5, leading=16, textColor=BLUE)
 
 
-HANDOUT_PAGES = 4
+HANDOUT_PAGES = 5
 TOTAL_PAGES = HANDOUT_PAGES + 8
 
 
@@ -157,11 +157,11 @@ class Handout:
 
 def guide():
     doc = Handout()
-    doc.begin("Tune the shooter. Build an auto path.",
+    doc.begin("Check the robot. Tune the shooter. Build an auto path.",
               "Robot: one of last season's practice robots. Field: tape on a wall and on the floor.")
     doc.heading("Goal")
-    doc.p("Leave with a launcher speed table we measured ourselves and one autonomous "
-          "path that ends inside a taped parking box.")
+    doc.p("Leave with checked drive and turn numbers, a launcher speed table we measured "
+          "ourselves, and one autonomous path that ends inside a taped parking box.")
     doc.heading("Safety")
     doc.p("Stand behind the robot whenever the launcher can spin. One student drives; "
           "a different student keeps a hand near <b>Stop</b> and may press it at any time. "
@@ -171,29 +171,70 @@ def guide():
     doc.table([
         ["Time", "What we do"],
         ["0:00-0:10", "Goal, safety, first jobs: driver, Stop, recorder, measurer. Swap often."],
-        ["0:10-0:45", "Build the practice field (page 2). Check the camera sees the tags."],
-        ["0:45-1:30", "Tune the shooter at three distances (page 3)."],
-        ["1:30-1:40", "Break. Press Stop first."],
-        ["1:40-2:05", "Measure a 24-inch drive and a 90-degree turn (page 4)."],
-        ["2:05-2:45", "Build the auto path and run it empty (page 4)."],
+        ["0:10-0:50", "One pair checks the robot's numbers: battery, distance, turns, launcher "
+                      "(page 2). Everyone else builds the practice field (page 3)."],
+        ["0:50-1:35", "Check the camera, then tune the shooter at three distances (page 4)."],
+        ["1:35-1:45", "Break. Press Stop first."],
+        ["1:45-2:45", "Build the auto path and run it empty (page 5)."],
         ["2:45-3:00", "Type the numbers into the code, save, photograph the tape layout."],
     ], [80, 436])
     doc.heading("Controls")
     doc.table([
         ["Program", "Controls"],
+        ["Tune Drive",
+         "INIT: D-pad UP/DOWN picks 24 in forward/back; LEFT/RIGHT picks a 90-degree turn. "
+         "Start runs it once."],
         ["Tune Shooter",
          "INIT: D-pad LEFT then DOWN picks RED AUDIENCE. After Start: sticks drive slowly; "
          "hold A to face the tags; D-pad UP/DOWN changes speed by 25; hold right bumper to "
          "spin; tap Y for one short shot once the screen says At speed."],
-        ["Tune Drive",
-         "INIT: D-pad UP/DOWN picks 24 in forward/back; LEFT/RIGHT picks a 90-degree turn. "
-         "Start runs it once."],
         ["Autonomous Route",
          "INIT: D-pad LEFT then DOWN picks RED AUDIENCE; A picks Start A; X switches dry run on/off. "
          "A dry run never spins or feeds."],
     ], [150, 366])
     doc.p("One robot runs at a time. Everyone else tapes the route, graphs the results, "
           "or reads the code for the next step.", SMALL)
+
+    doc.begin("Robot checks worksheet",
+              "Do these first: the shooting marks and the route assume the robot drives the "
+              "distance it is told. Take the balls out.")
+    doc.p("<b>Battery</b> (INIT, any program): volts ________ &nbsp;&nbsp; GOOD / SWAP / CHARGE "
+          "(circle). SWAP or CHARGE: change it before going on.")
+    doc.heading("Which way the Hub faces  (Tune Drive, INIT only)")
+    doc.p("Logo faces ________ &nbsp; USB faces ________ &nbsp; Match LOGO / USB in Heading.java? yes / fixed. "
+          "Quarter turn right by hand: heading ______ to ______ (should go UP about 90). "
+          "Lift front / lift one side: heading moved ______ / ______ (only a few degrees). "
+          "Both pass: show the mentor, who sets MOUNTING_CONFIRMED = true.", SMALL)
+    doc.heading("Distance: ticks per inch  (Tune Drive)")
+    doc.p("Line a mark on the robot up with a tape mark. Run it, write the ticks and seconds "
+          "from the screen, press Stop, then measure with a tape. <b>Ticks per inch = average of "
+          "left and right ticks / real inches.</b> The code starts at about 45. If your average "
+          "is more than 1 away, type it on your robot's TICKS_PER_INCH_... line near the top of "
+          "robot/Drive.java (for last season's goBILDA: TICKS_PER_INCH_PRACTICE_GOBILDA) and run once more.", SMALL)
+    doc.table([
+        ["Asked for", "Left ticks", "Right ticks", "Measured (in)", "Seconds", "Ticks per inch"],
+        ["24 in forward", "", "", "", "", ""],
+        ["24 in forward", "", "", "", "", ""],
+        ["24 in backward", "", "", "", "", ""],
+        ["Average", "", "", "", "", ""],
+        ["New number: 24 in forward", "", "", "", "", ""],
+    ], [140, 66, 66, 82, 62, 100], heights=[24, 26, 26, 26, 26, 26])
+    doc.heading("Turns  (Tune Drive)")
+    doc.p("Line the robot up with a taped square corner, then run each turn.", SMALL)
+    doc.table([
+        ["Asked for", "Degrees off (by eye)", "Seconds", "Wobbled at the end?"],
+        ["90 degrees right", "", "", ""],
+        ["90 degrees left", "", "", ""],
+    ], [140, 140, 96, 140], heights=[24, 26, 26])
+    doc.heading("Launcher speed  (Tune Shooter, no balls)")
+    doc.p("Start, hold the right bumper, count the seconds until At speed: true, write the "
+          "measured speed once it settles. Then D-pad UP eight times (200 more) and repeat. "
+          "Never reaching the speed asked for: check the battery, then tell the mentor.", SMALL)
+    doc.table([
+        ["Speed asked for", "Speed measured", "Seconds to At speed"],
+        ["Normal: ________", "", ""],
+        ["Normal + 200: ________", "", ""],
+    ], [190, 163, 163], heights=[24, 26, 26])
 
     doc.begin("Build the practice field",
               "The wall stands in for our hive. The sizes come from the game manual.")
@@ -216,19 +257,23 @@ def guide():
     doc.heading("AprilTag sheets")
     doc.table([
         ["Target (choose in INIT)", "Tag IDs", "Packet pages: right / left"],
-        ["BLUE AUDIENCE", "38, 39, 40, 41", "5 / 6"],
-        ["BLUE SCORING (far side)", "42, 43, 44, 45", "7 / 8"],
-        ["<b>RED AUDIENCE - use this one</b>", "34, 35, 36, 37", "<b>9 / 10</b>"],
-        ["RED SCORING (far side)", "30, 31, 32, 33", "11 / 12"],
+        ["BLUE AUDIENCE", "38, 39, 40, 41", f"{HANDOUT_PAGES + 1} / {HANDOUT_PAGES + 2}"],
+        ["BLUE SCORING (far side)", "42, 43, 44, 45", f"{HANDOUT_PAGES + 3} / {HANDOUT_PAGES + 4}"],
+        ["<b>RED AUDIENCE - use this one</b>", "34, 35, 36, 37",
+         f"<b>{HANDOUT_PAGES + 5} / {HANDOUT_PAGES + 6}</b>"],
+        ["RED SCORING (far side)", "30, 31, 32, 33", f"{HANDOUT_PAGES + 7} / {HANDOUT_PAGES + 8}"],
     ], [230, 130, 156])
     doc.p("Print at Actual Size / 100%. A black square measures <b>3.25 in</b>. Tape the "
           "LEFT sheet to the left of the RIGHT sheet so the printed center marks meet; the "
           "labels go below the tags. Tilt the webcam up until INIT shows <b>Tag seen: true</b> "
           "from the 34-inch mark. Use last season's balls. If the launcher cannot reach the "
-          "rectangle, lower it, keep its size, and write the new height on page 3.", SMALL)
+          "rectangle, lower it, keep its size, and write the new height on page 4.", SMALL)
 
     doc.begin("Shooting worksheet",
               "Program: Tune Shooter. Shoot five, count, change ONE thing, repeat.")
+    doc.p("<b>First:</b> on the 34-inch mark, read the camera range 3 times, moving away and back "
+          "in between: ______ ______ ______ (should be within 1 in). Load one ball and tap Y once: "
+          "exactly one ball should leave. ______", SMALL)
     doc.p("<b>1.</b> Front bumper on the mark, on the center line. Hold A to face the tags. "
           "<b>2.</b> Hold right bumper; when At speed, tap Y once per ball. Shoot five. "
           "<b>3.</b> Write one row. <b>4.</b> Mostly low: speed up one step. Mostly high: "
@@ -236,12 +281,12 @@ def guide():
           "<b>5.</b> At four or more hits, shoot five more to check, then circle the row. "
           "<b>6.</b> Do the 34, 26 and 18 inch marks.")
     doc.p("Rectangle bottom edge: ________ in &nbsp;&nbsp; Target printed: ______________ "
-          "&nbsp;&nbsp; Top speed allowed: ________ &nbsp;&nbsp; Battery volts at rest: ______ "
-          "(below 12.5: swap, then re-shoot one row)", SMALL)
+          "&nbsp;&nbsp; Top speed allowed: ________ &nbsp;&nbsp; Battery re-checked: ______ "
+          "(SWAP: change it, then re-shoot one row)", SMALL)
     rows = [["Mark (in<br/>from wall)", "Camera<br/>range (in)", "Speed<br/>(ticks/s)",
              "Hits<br/>out of 5", "Misses: low, high,<br/>left, right", "Next change"]]
-    rows += [["", "", "", "", "", ""] for _ in range(12)]
-    doc.table(rows, [70, 70, 70, 56, 130, 120], heights=[34] + [27] * 12)
+    rows += [["", "", "", "", "", ""] for _ in range(11)]
+    doc.table(rows, [70, 70, 70, 56, 130, 120], heights=[34] + [26] * 11)
     doc.heading("Put the circled rows in the code")
     doc.p("In ShooterCalibration.java, type the circled rows into RANGE_INCHES and "
           "SPEED_TICKS_PER_SECOND, closest range first. Between two rows the robot picks a "
@@ -249,19 +294,8 @@ def guide():
     doc.p("Row 1: range ______ speed ______ &nbsp;&nbsp; Row 2: range ______ speed ______ "
           "&nbsp;&nbsp; Row 3: range ______ speed ______", SMALL)
 
-    doc.begin("Drive, turn and auto path worksheet",
-              "Take the balls out for everything on this page.")
-    doc.heading("Measure a drive and a turn  (Tune Drive)")
-    doc.p("Run it, write the ticks from the screen, press Stop, then measure with a tape. "
-          "Ticks per inch = average ticks / real inches. The code starts at about 45.", SMALL)
-    doc.table([
-        ["Asked for", "Left ticks", "Right ticks", "Measured", "Ticks per inch", "Next change"],
-        ["24 in forward", "", "", "", "", ""],
-        ["24 in forward", "", "", "", "", ""],
-        ["90 degrees right", "", "", "", "not used", ""],
-        ["90 degrees left", "", "", "", "not used", ""],
-    ], [96, 70, 70, 80, 84, 116], heights=[24, 26, 26, 26, 26])
-    doc.heading("Build the auto path  (Autonomous Route)")
+    doc.begin("Auto path worksheet",
+              "Program: Autonomous Route. Take the balls out; dry run stays on.")
     doc.p("A route is a list of steps in Routes.java: <b>drive(inches)</b>, "
           "<b>turn(degrees)</b> and <b>aimAndShoot()</b>, which faces the tags, shoots if "
           "switched on, and turns back. Start with the back bumper on the start line, on "
@@ -298,18 +332,19 @@ def build():
     writer.merge(0, handout, import_outline=False)
     writer.add_metadata({"/Title": "Meeting 5: Shooter Tuning, Auto Path and BIOBUZZ Targets",
                          "/Author": "BIOBUZZ programming mentorship; target artwork by FIRST",
-                         "/Subject": "Four-page handout plus eight official Letter target sheets"})
+                         "/Subject": "Five-page handout plus eight official Letter target sheets"})
     writer.root_object[NameObject("/ViewerPreferences")] = DictionaryObject({
         NameObject("/PrintScaling"): NameObject("/None"),
         NameObject("/Duplex"): NameObject("/Simplex"),
         NameObject("/PickTrayByPDFSize"): BooleanObject(True),
     })
-    for title, index in [("Plan, safety and controls", 0), ("Build the practice field", 1),
-                         ("Shooting worksheet", 2), ("Drive, turn and auto path worksheet", 3),
-                         ("BLUE AUDIENCE: right, then left", 4),
-                         ("BLUE SCORING: right, then left", 6),
-                         ("RED AUDIENCE: right, then left", 8),
-                         ("RED SCORING: right, then left", 10)]:
+    for title, index in [("Plan, safety and controls", 0), ("Robot checks worksheet", 1),
+                         ("Build the practice field", 2), ("Shooting worksheet", 3),
+                         ("Auto path worksheet", 4),
+                         ("BLUE AUDIENCE: right, then left", HANDOUT_PAGES),
+                         ("BLUE SCORING: right, then left", HANDOUT_PAGES + 2),
+                         ("RED AUDIENCE: right, then left", HANDOUT_PAGES + 4),
+                         ("RED SCORING: right, then left", HANDOUT_PAGES + 6)]:
         writer.add_outline_item(title, index)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT.open("wb") as stream:

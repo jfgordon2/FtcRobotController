@@ -11,12 +11,40 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * keep processing Stop and telemetry.
  */
 public final class Drive {
-    // Encoder ticks for one inch of travel = ticks per wheel turn / inches per wheel turn.
-    // The three starting values are for BIOBUZZ_GOBILDA, PRACTICE_GOBILDA, PRACTICE_REV.
-    // goBILDA: 537.7 ticks, 96 mm wheel. REV: 28 x 15 = 420 ticks, 3 inch wheel (REV's own figure).
-    // After Meeting 10, replace the number for our robot with the one we measured.
+    // TICKS PER INCH: how many encoder ticks a drive wheel counts while the robot rolls one inch.
+    // There is one line per robot. Change ONLY the line for the robot you are using (ROBOT in
+    // StarterRobot.java), and type your measured number in place of the starting number.
+    public static final double TICKS_PER_INCH_BIOBUZZ_GOBILDA = 45.28;
+    public static final double TICKS_PER_INCH_PRACTICE_GOBILDA = 45.28;
+    public static final double TICKS_PER_INCH_PRACTICE_REV = 44.56;
+    //
+    // WHERE THE STARTING NUMBERS COME FROM
+    // Each one is this formula, worked out once and rounded to two decimal places:
+    //
+    //   goBILDA:  537.7 / (Math.PI * 96 / 25.4)  = 45.28
+    //   REV:      420   / (Math.PI * 3)          = 44.56
+    //
+    // In words: ticks in one turn of the wheel / inches the robot rolls in one turn of the wheel.
+    //
+    //   537.7 and 420   Ticks in one turn of the wheel. The encoder counts 28 ticks per turn of the
+    //                   motor, and the gearbox turns the motor 19.2 times (goBILDA) or 15 times (REV)
+    //                   for each turn of the wheel: 28 x 15 = 420, and 28 x 19.2 is 537.6. goBILDA
+    //                   lists 537.7 because its exact gear ratio is a little over 19.2.
+    //   96 and 3        The wheel's diameter: 96 millimetres (goBILDA) or 3 inches (REV).
+    //   / 25.4          Turns millimetres into inches (25.4 mm = 1 inch): 96 / 25.4 = 3.780 inches.
+    //   Math.PI         Java's name for pi, about 3.1416.
+    //   Math.PI * diameter   The distance around the wheel (its circumference), which is how far the
+    //                   robot rolls in one turn: 3.1416 x 3.780 = 11.87 inches; 3.1416 x 3 = 9.425 inches.
+    //
+    //   So: 537.7 / 11.87 = 45.28 and 420 / 9.425 = 44.56.
+    //
+    // The formula assumes the wheel never slips and is exactly the size on the box. Meeting 5 checks
+    // the number with a tape measure; Meeting 10 works the formula out by hand. If they disagree,
+    // trust the tape.
+
+    // The code below uses the line for this robot. You do not need to change it.
     public static final double TICKS_PER_INCH = StarterRobot.pick(
-            537.7 / (96.0 * Math.PI / 25.4), 537.7 / (96.0 * Math.PI / 25.4), 420.0 / (3.0 * Math.PI));
+            TICKS_PER_INCH_BIOBUZZ_GOBILDA, TICKS_PER_INCH_PRACTICE_GOBILDA, TICKS_PER_INCH_PRACTICE_REV);
     // Proportional gain (often written Kp): correction power = error * gain.
     // For turns: 10 degrees of error * 0.015 requests 0.15 power, before the power limit.
     public static final double TURN_PROPORTIONAL_GAIN = 0.015;

@@ -17,7 +17,7 @@ public final class TargetSelection {
     private boolean wasRight;
     private boolean wasUp;
     private boolean wasDown;
-    // D-pad left/right: RED/BLUE. Up/down: the SCORING cell (the side away from the audience) / the AUDIENCE cell.
+    // D-pad left/right: RED/BLUE. Up/down: the SCORING cell (the side of the field opposite the audience) / the AUDIENCE cell.
     // These are FIRST's own names for the two groups of tags on a hive.
     // Contradictory directions are ignored. Only new presses change selections.
     public void update(boolean left, boolean right, boolean up, boolean down, boolean cellAllowed) {
@@ -67,7 +67,7 @@ public final class TargetSelection {
         if (cell == null) {
             return "NOT SELECTED";
         }
-        // SCORING is FIRST's name for the tags on the far side of the hive, away from the audience.
+        // SCORING is FIRST's name for the tags on the side of the field opposite the audience (manual section 9.9).
         if (cell.equals("SCORING")) {
             return "SCORING (far side)";
         }

@@ -8,14 +8,14 @@ BIOBUZZ manual, Team Update 03, and FTC SDK 12.0.0.
 **Robot:** one of last season's practice robots, goBILDA or REV, whichever has the webcam. The BIOBUZZ StarterBot kit has not arrived.
 **Field:** none. A tape rectangle on a wall is the hive opening; tape on the floor is the
 start line and the parking zone.
-**Result:** a measured range-to-speed table and one autonomous path that ends in the box.
+**Result:** checked ticks per inch and turns, a measured range-to-speed table, and one autonomous path that ends in the box.
 
 ## 1. Before the meeting (about 30 minutes)
 
 | Check | Where | What to do |
 |---|---|---|
 | Which robot | `StarterRobot.java` | Set `ROBOT` to the robot on the table. `PRACTICE_GOBILDA` expects `left_drive`, `right_drive`, `launcher`, `left_feeder`, `right_feeder`. `PRACTICE_REV` expects `leftDrive`, `rightDrive`, `flywheel`, `coreHex`, `servo`. Both also need `imu` and `Webcam 1` in the Driver Station configuration. |
-| Hub direction | `Heading.java` | Set `LOGO` and `USB` to the way the Control Hub really faces on the robot, then `MOUNTING_CONFIRMED = true`. In INIT, turning the robot right by hand must make the heading go up. |
+| Hub direction | `Heading.java` | Students check this first in the lesson. Look at the Hub beforehand so you know the right `LOGO` and `USB`, and leave `MOUNTING_CONFIRMED = false`. Set it to `true` and build once students show you the turn test (a quarter turn right by hand raises the heading by about 90) and the tilt test (lifting the front or one side barely changes it). |
 | Drive direction | `StarterRobot.java` | Wheels off the floor, run **Tune Shooter**, push the left stick forward. Both sides roll forward. Then `MOTION_ENABLED = true`. |
 | Launcher | `ShooterCalibration.java` | No balls. Hold right bumper; measured speed should reach the requested speed. `MAXIMUM_SPEED` (1800 ticks/s) is the cap for the tuner and the table; lower it if the room needs it. |
 | Camera | webcam mount | Tilt it up, about 45 degrees to start. The tags will be about 50 inches up the wall and the robot is 2 to 3 feet away. |
@@ -48,7 +48,7 @@ across and will not feed through that launcher.
 
 **Why RED AUDIENCE:** Figure 10-2 shows the red hive starting the match with its
 audience-side CELL facing up. For blue it is the far-side CELL (`BLUE SCORING`). SCORING is
-FIRST's name for the tags on the side away from the audience; the INIT screen shows it as `SCORING (far side)`.
+FIRST's name for the tags on the side of the field opposite the audience; the INIT screen shows it as `SCORING (far side)`.
 In INIT, D-pad LEFT then DOWN selects RED AUDIENCE.
 
 **Printing:** US Letter, Actual Size / 100%, single-sided. A black square must
@@ -59,15 +59,28 @@ its size, and write the new height on the worksheet. The method is what matters 
 
 ## 3. How the three exercises work
 
-**Shooter.** `TuneShooter` asks the launcher for a speed in encoder
+They run in this order on purpose. The shooting marks and the route both assume the
+robot drives the distance it is told, so the robot's own numbers are checked first,
+while the rest of the team tapes the field.
+
+**Robot checks.** Battery on INIT; then the Hub direction: students compare the Hub's
+logo and USB directions with `Heading.java` and do the turn and tilt tests in INIT,
+and the mentor sets `MOUNTING_CONFIRMED`. Then `TuneDrive` runs 24 inches forward twice and
+backward once. Students compare the encoder ticks with a tape measure, work out ticks
+per inch, and correct their robot's `TICKS_PER_INCH_…` line in `Drive.java` (one plain number per
+robot) if it is more than 1 away from the
+starting value. They also check 90-degree turns against a taped corner (turns use the
+IMU, so there is no student number to change) and that the launcher reaches its normal
+speed, and 200 more, with no balls. The screen now shows how many seconds each move took,
+which Meeting 11 uses for its 4-second rule.
+
+**Shooter.** It starts with two quick checks: the camera range at one mark is
+steady (three readings within about 1 inch), and one tap of Y sends one ball.
+`TuneShooter` asks the launcher for a speed in encoder
 ticks per second with `setVelocity`, the same way goBILDA's code and our baseline
 TeleOp do. D-pad up/down changes the request by 25. A tap of Y starts one
 short shot: the feeder runs for a moment once the wheel is at speed. Students record the camera range and the speed that gives at least
 four hits in five, then type those rows into `ShooterCalibration.java`.
-
-**Drive and turn.** `TuneDrive` runs one 24-inch drive or one
-90-degree turn. Students compare encoder ticks with a tape measure and correct
-`Drive.TICKS_PER_INCH` if needed. Turns finish on the IMU heading.
 
 **Auto path.** `AutoFollowRoute` carries out a route: a list of `drive`,
 `turn` and `aimAndShoot` steps in `Routes.java`. Students edit one list

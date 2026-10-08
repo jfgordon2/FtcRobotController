@@ -22,6 +22,7 @@ public class TuneDrive extends OpMode {
     private double amount;
     private int initialLeft;
     private int initialRight;
+    private double finishedSeconds;
     private String result = "Choose a command during INIT";
 
     @Override
@@ -105,10 +106,15 @@ public class TuneDrive extends OpMode {
             Drive.Result state = drive.update(timer.seconds());
             result = state + " " + drive.reason();
             running = state == Drive.Result.RUNNING;
+            if (!running) {
+                // Remember how long the move took. Routes need every move to finish within 4 seconds.
+                finishedSeconds = timer.seconds();
+            }
         } else {
             drive.stop();
         }
         telemetry.addData("Result", result);
+        telemetry.addData("Seconds", "%.1f", running ? timer.seconds() : finishedSeconds);
         telemetry.addData("Tick change left / right", "%d / %d", robot.leftDrive.getCurrentPosition() - initialLeft,
                 robot.rightDrive.getCurrentPosition() - initialRight);
         telemetry.addLine("After motion ends, record counts, press Stop, then measure actual distance/angle.");

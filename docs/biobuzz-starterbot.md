@@ -40,7 +40,7 @@ configuration exactly.
 | Launcher speed, ticks/s | 1250 | 1125 | 1300 |
 | "At speed" means within | 50 | 50 | 100 |
 | Launcher P / F | 40 / 12.5 | 300 / 10 | the Hub's built-in values |
-| Ticks per inch to start from | 45.3 | 45.3 | 44.6 |
+| Ticks per inch to start from | 45.28 | 45.28 | 44.56 |
 
 All three also use `imu` (the Control Hub's heading sensor) and, for camera programs,
 `Webcam 1`. These are each vendor's starting values, not measurements of our robots.
@@ -58,7 +58,7 @@ A value used by one class lives in that class. A value several classes need live
 | `FEED_ENABLED` | `StarterRobot` | Shooting has been tested by hand. Camera-aimed feeding is off until then. |
 | `LAUNCHER_SPEED`, `LAUNCHER_SPEED_TOLERANCE`, `LAUNCHER_P`, `LAUNCHER_F` | `StarterRobot` | Meeting 13, or if the vendor values are clearly wrong. |
 | `LOGO`, `USB`, `MOUNTING_CONFIRMED` | `Heading` | The Hub's real mounting has been checked (below). Re-check after changing robots. |
-| `TICKS_PER_INCH`, drive and turn gains, `DRIVE_POWER`, `TURN_POWER`, `COMMAND_TIMEOUT_SECONDS` | `Drive` | Meetings 5 and 10. |
+| `TICKS_PER_INCH_BIOBUZZ_GOBILDA`, `_PRACTICE_GOBILDA`, `_PRACTICE_REV` (one per robot), drive and turn gains, `DRIVE_POWER`, `TURN_POWER`, `COMMAND_TIMEOUT_SECONDS` | `Drive` | Meetings 5 and 10. |
 | Aim gain, maximum turn power, tolerance, `OFFSET_DEGREES` | `TagCamera` | Aiming wobbles, is slow, or shots land to one side. |
 | `RANGE_INCHES`, `SPEED_TICKS_PER_SECOND`, tuner step, cap and tap length, `USE_CAMERA` | `ShooterCalibration` | Meeting 5, and again for each new robot or target. |
 | `FEED_SECONDS` | `ShotTimer` | Meeting 12. |
@@ -74,11 +74,14 @@ is mounted.
    which way the Hub's USB ports point, relative to the robot.
 2. Set `LOGO` and `USB` in `Heading.java` to match. The starting guess is logo up,
    USB forward. See [FIRST's mounting diagrams](https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html#physical-hub-mounting).
-3. Run **Tune Drive** and press INIT only. Turn the robot about 90
-   degrees to the right by hand. The heading on the screen should go up by about 90.
-   To the left it should go down.
-4. If it is wrong, fix `LOGO` and `USB`. Do not reverse motors to make up for it.
-5. Set `MOUNTING_CONFIRMED = true`.
+3. Run **Tune Drive** and press INIT only (the motors stay off). Turn test: twist the
+   robot on the floor by hand a quarter turn to the right. The heading on the screen should
+   go up by about 90; turning back brings it down.
+4. Tilt test: lift the front about 4 inches, then one side. The heading should change by
+   only a few degrees each time. A wrong axis can pass the turn test's direction but
+   fail this one.
+5. If either test fails, fix `LOGO` and `USB` and build again. Do not reverse motors to make up for it.
+6. Set `MOUNTING_CONFIRMED = true`. In Meeting 5 students do steps 1 to 5 and the mentor does this one.
 
 ## How the autonomous works
 

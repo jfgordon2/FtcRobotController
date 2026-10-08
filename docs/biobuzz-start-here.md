@@ -56,7 +56,7 @@ switches: `MOUNTING_CONFIRMED` in `robot/Heading.java` and `MOTION_ENABLED` in
 | Hold right bumper | Spin the launcher; it feeds once the wheel is fast enough. |
 
 **Choosing a target (camera programs, during INIT):** D-pad left = RED, right = BLUE,
-up = the SCORING cell (the far side, away from the audience), down = the AUDIENCE cell.
+up = the SCORING cell (the far side: the side of the field opposite the audience), down = the AUDIENCE cell.
 These are FIRST's names for the two groups of tags.
 
 **TeleOp with Aiming:** hold **A** to turn toward the tags. **A + right bumper** feeds,
@@ -77,7 +77,7 @@ Change one number at a time, build, and repeat the same test.
 | 1. Which robot | Tell the code which robot it is on. | `ROBOT` in `robot/StarterRobot.java` |
 | 2. Drive direction | Wheels off the floor: stick forward rolls both sides forward. | `robot/StarterRobot.java` |
 | 3. Hub direction | The [Hub check](biobuzz-starterbot.md#check-the-hub-direction-before-any-automatic-driving). | `LOGO`, `USB`, `MOUNTING_CONFIRMED` in `robot/Heading.java` |
-| 4. Distance and turns | Tune Drive: ask for 24 inches and 90 degrees, measure with a tape. | `TICKS_PER_INCH` in `robot/Drive.java` |
+| 4. Distance and turns | Tune Drive: ask for 24 inches and 90 degrees, measure with a tape. | Your robot's `TICKS_PER_INCH_…` line in `robot/Drive.java` |
 | 5. Shooting | Tune Shooter: find the speed that hits from each range. | The table in `settings/ShooterCalibration.java` |
 | 6. Route | Autonomous Route with dry run on, until it ends in the right place. | Your list in `settings/Routes.java` |
 | 7. Shooting in autonomous | Dry run off, after `FEED_ENABLED` is set. | `FEED_SECONDS` in `robot/ShotTimer.java` |
