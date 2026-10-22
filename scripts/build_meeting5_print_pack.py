@@ -20,19 +20,24 @@ from reportlab.platypus import Paragraph, Table, TableStyle
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "assets/print/biobuzz-apriltags-letter-v1.pdf"
 OUTPUT = ROOT / "output/pdf/meeting5-shooter-auto-print-pack.pdf"
-INK = colors.HexColor("#153344")
-BLUE = colors.HexColor("#176275")
-PALE = colors.HexColor("#eaf2f4")
-GRAY = colors.HexColor("#52616b")
+# Text is printed in black ink only (CMYK 0,0,0,1), the same black FIRST's tag sheets use.
+# Small coloured text is built from overlapping cyan, magenta and yellow dots and comes out
+# fuzzy on many colour printers, so colour is used only for fills, lines and the diagram.
+INK = colors.CMYKColor(0, 0, 0, 1)
+TEAL = colors.HexColor("#176275")        # accent lines and the field diagram
+BLUE = colors.HexColor("#cfe3e9")        # light blue fill: top bar and table headers
+PALE = colors.HexColor("#eaf2f4")        # very light blue fill
+GRAY = INK
+RULE = colors.HexColor("#9fb6be")        # table grid and footer line
 WIDTH = 516
 BODY = ParagraphStyle("body", fontName="Helvetica", fontSize=10.5,
                       leading=14, textColor=INK, spaceAfter=0)
 SMALL = ParagraphStyle("small", parent=BODY, fontSize=9.2, leading=12)
 CELL = ParagraphStyle("cell", parent=BODY, fontSize=9.5, leading=12)
 HEAD = ParagraphStyle("head", parent=CELL, fontName="Helvetica-Bold",
-                      textColor=colors.white)
+                      textColor=INK)
 SUBHEAD = ParagraphStyle("subhead", parent=BODY, fontName="Helvetica-Bold",
-                         fontSize=12.5, leading=16, textColor=BLUE)
+                         fontSize=12.5, leading=16, textColor=INK)
 
 
 HANDOUT_PAGES = 5
@@ -53,7 +58,9 @@ class Handout:
         self.page += 1
         self.c.setFillColor(BLUE)
         self.c.rect(0, 752, 612, 40, fill=1, stroke=0)
-        self.c.setFillColor(colors.white)
+        self.c.setFillColor(TEAL)
+        self.c.rect(0, 749, 612, 3, fill=1, stroke=0)
+        self.c.setFillColor(INK)
         self.c.setFont("Helvetica-Bold", 10)
         self.c.drawString(48, 767, "BIOBUZZ  |  MEETING 5")
         self.c.setFillColor(INK)
@@ -61,7 +68,7 @@ class Handout:
         self.c.drawString(48, 719, title)
         self.y = 697
         self.p(subtitle, SMALL, after=12)
-        self.c.setStrokeColor(colors.HexColor("#bccbd1"))
+        self.c.setStrokeColor(RULE)
         self.c.line(48, 43, 564, 43)
         self.c.setFont("Helvetica", 8)
         self.c.setFillColor(GRAY)
@@ -91,7 +98,7 @@ class Handout:
                     ("RIGHTPADDING", (0, 0), (-1, -1), 6),
                     ("TOPPADDING", (0, 0), (-1, -1), 5),
                     ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
-                    ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#b4c3c9"))]
+                    ("GRID", (0, 0), (-1, -1), 0.5, RULE)]
         if header:
             commands.append(("BACKGROUND", (0, 0), (-1, 0), BLUE))
         item.setStyle(TableStyle(commands))
@@ -107,7 +114,7 @@ class Handout:
         top = self.y - 6
         height = 158
         base = top - height
-        c.setStrokeColor(BLUE)
+        c.setStrokeColor(TEAL)
         c.setFillColor(INK)
         # Wall, front view.
         c.setLineWidth(1)

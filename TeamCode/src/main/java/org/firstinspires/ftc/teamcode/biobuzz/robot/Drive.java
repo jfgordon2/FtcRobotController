@@ -268,12 +268,13 @@ public final class Drive {
         return reason;
     }
 
-    // Package-private: only the tests use these.
-    int leftTargetTicks() {
+    /** Absolute encoder target for the latest command, exposed for tuning telemetry. */
+    public int leftTargetTicks() {
         return leftTargetTicks;
     }
 
-    int rightTargetTicks() {
+    /** Absolute encoder target for the latest command, exposed for tuning telemetry. */
+    public int rightTargetTicks() {
         return rightTargetTicks;
     }
 }

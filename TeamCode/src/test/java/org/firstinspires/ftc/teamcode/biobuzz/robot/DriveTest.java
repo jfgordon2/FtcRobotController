@@ -5,6 +5,55 @@ import static org.junit.Assert.*;
 
 public class DriveTest {
     @Test
+    public void distanceTargetsAreRelativeAndBothWheelsMustSettle() {
+        TestHardware.Motor left = new TestHardware.Motor();
+        TestHardware.Motor right = new TestHardware.Motor();
+        left.position = 700;
+        right.position = -300;
+        Drive drive = new Drive(TestHardware.robot(left, right), new TestHardware.FakeHeading());
+
+        drive.driveInches(24, 0);
+        int travelTicks = (int) Math.round(24 * Drive.TICKS_PER_INCH);
+        assertEquals(700 + travelTicks, drive.leftTargetTicks());
+        assertEquals(-300 + travelTicks, drive.rightTargetTicks());
+        assertEquals(Drive.Result.RUNNING, drive.update(0.1));
+        assertTrue(left.power > 0 && right.power > 0);
+
+        left.position = drive.leftTargetTicks();
+        right.position = drive.rightTargetTicks() - 100;
+        drive.update(0.2);
+        assertEquals(Drive.Result.RUNNING, drive.update(0.5));
+        assertTrue(right.power > 0);
+
+        right.position = drive.rightTargetTicks();
+        assertEquals(Drive.Result.RUNNING, drive.update(0.6));
+        assertEquals(Drive.Result.DONE, drive.update(0.9));
+        assertEquals(0, left.power, 0);
+        assertEquals(0, right.power, 0);
+    }
+
+    @Test
+    public void recordedOvershootsRequestReverseAndFaultAtFourSeconds() {
+        int[][] recordedCounts = {{1924, 1884}, {2005, 1947}, {1950, 1970}};
+        for (int[] counts : recordedCounts) {
+            TestHardware.Motor left = new TestHardware.Motor();
+            TestHardware.Motor right = new TestHardware.Motor();
+            Drive drive = new Drive(TestHardware.robot(left, right), new TestHardware.FakeHeading());
+            drive.driveInches(24, 0);
+
+            // Supply each recorded pair just before the time limit.
+            left.position = counts[0];
+            right.position = counts[1];
+            assertEquals(Drive.Result.RUNNING, drive.update(3.9));
+            assertTrue("Overshoot should request reverse on both wheels", left.power < 0 && right.power < 0);
+            assertEquals(Drive.Result.FAULT, drive.update(4.0));
+            assertTrue(drive.reason().contains("timeout"));
+            assertEquals(0, left.power, 0);
+            assertEquals(0, right.power, 0);
+        }
+    }
+
+    @Test
     public void turnsUseHeadingAndSensorLossStopsMotion() {
         TestHardware.Motor l=new TestHardware.Motor(),r=new TestHardware.Motor();TestHardware.FakeHeading h=new TestHardware.FakeHeading();
         Drive d=new Drive(TestHardware.robot(l,r),h);

@@ -19,6 +19,7 @@ public class TuneDrive extends OpMode {
     private boolean chosen;
     private boolean turn;
     private boolean running;
+    private boolean commandIssued;
     private double amount;
     private int initialLeft;
     private int initialRight;
@@ -38,6 +39,7 @@ public class TuneDrive extends OpMode {
         telemetry.addData("Hub logo / USB / confirmed", "%s / %s / %s",
                 Heading.LOGO, Heading.USB, Heading.MOUNTING_CONFIRMED);
         telemetry.addData("Heading sensor (IMU), clockwise degrees", heading.degrees());
+        telemetry.addData("Drive ticks per inch", "%.2f", Drive.TICKS_PER_INCH);
         if (gamepad1.dpad_up && !gamepad1.dpad_down && !gamepad1.dpad_left && !gamepad1.dpad_right) {
             chooseDriveInches(24);
         }
@@ -94,14 +96,13 @@ public class TuneDrive extends OpMode {
         } else {
             drive.driveInches(amount, timer.seconds());
         }
+        commandIssued = true;
         running = true;
     }
 
     @Override
     public void loop() {
         drive.observePose();
-        telemetry.addData("Local X forward / Y right / heading", "%.1f / %.1f / %.1f",
-                drive.xInches(), drive.yInches(), drive.headingDegrees());
         if (running) {
             Drive.Result state = drive.update(timer.seconds());
             result = state + " " + drive.reason();
@@ -115,9 +116,23 @@ public class TuneDrive extends OpMode {
         }
         telemetry.addData("Result", result);
         telemetry.addData("Seconds", "%.1f", running ? timer.seconds() : finishedSeconds);
-        telemetry.addData("Tick change left / right", "%d / %d", robot.leftDrive.getCurrentPosition() - initialLeft,
-                robot.rightDrive.getCurrentPosition() - initialRight);
-        telemetry.addLine("After motion ends, record counts, press Stop, then measure actual distance/angle.");
+        if (chosen) {
+            telemetry.addData("Command", "%s %.1f", turn ? "Turn degrees" : "Drive inches", amount);
+        }
+        telemetry.addData("Drive ticks per inch", "%.2f", Drive.TICKS_PER_INCH);
+        int leftTicks = robot.leftDrive.getCurrentPosition();
+        int rightTicks = robot.rightDrive.getCurrentPosition();
+        telemetry.addData("Tick change left / right", "%d / %d", leftTicks - initialLeft,
+                rightTicks - initialRight);
+        if (commandIssued && !turn) {
+            telemetry.addData("Target tick change left / right", "%d / %d",
+                    drive.leftTargetTicks() - initialLeft, drive.rightTargetTicks() - initialRight);
+            telemetry.addData("Remaining ticks left / right", "%d / %d",
+                    drive.leftTargetTicks() - leftTicks, drive.rightTargetTicks() - rightTicks);
+        }
+        telemetry.addData("Local X forward / Y right / heading", "%.1f / %.1f / %.1f",
+                drive.xInches(), drive.yInches(), drive.headingDegrees());
+        telemetry.addLine("After motion ends, record Result, targets, and counts before Stop; then measure distance/angle.");
     }
 
     @Override
